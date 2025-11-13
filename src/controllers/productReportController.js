@@ -1,62 +1,79 @@
+const fs = require('fs');
+const path = require('path');
+const fastCsv = require('fast-csv');
 const ExcelJS = require('exceljs');
-const productService = require('../services/productService');
+const { getProductsBatch } = require('../models/productModel');
 
-const exportProductsExcel = async (req, res) => {
-  try {
-    const products = await productService.getProducts();
+// CSV report generation using streaming and batching
+async function generateCSVReport(filePath) {
+  
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  
+  const ws = fs.createWriteStream(filePath);
+  const csvStream = fastCsv.format({ headers: true });
+  csvStream.pipe(ws);
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Products');
+  const batchSize = 10000;
+  let offset = 0;
 
-    // Define columns
-    worksheet.columns = [
-      { header: 'ID', key: 'id', width: 10 },
-      { header: 'Name', key: 'name', width: 30 },
-      { header: 'Image URL', key: 'image_url', width: 50 },
-      { header: 'Price', key: 'price', width: 15 },
-      { header: 'Category ID', key: 'category_id', width: 15 }
-    ];
+  while (true) {
+    const products = await getProductsBatch(offset, batchSize);
+    console.log("products",products);
+    if (products.length === 0) break;
 
-    // Add rows
+    products.forEach(product => csvStream.write(product));
+    offset += batchSize;
+  }
+
+  csvStream.end();
+
+  return new Promise(resolve => ws.on('finish', resolve));
+}
+
+// XLSX report generation using streaming and batching
+async function generateXLSXReport(filePath) {
+
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ filename: filePath });
+  const sheet = workbook.addWorksheet('Products');
+
+  sheet.addRow(['name', 'image_url', 'price', 'category_id']).commit();
+
+  const batchSize = 1000;
+  let offset = 0;
+
+  while (true) {
+    const products = await getProductsBatch(offset, batchSize);
+    if (products.length === 0) break;
+
     products.forEach(product => {
-      worksheet.addRow(product);
+      sheet.addRow([product.name, product.image_url, product.price, product.category_id]).commit();
     });
 
-    // Streaming response
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename="products_report.xlsx"');
-
-    await workbook.xlsx.write(res);
-    res.end();
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    offset += batchSize;
   }
-};
 
-const exportProductsCSV = async (req, res) => {
-  try {
-    const products = await productService.getProducts();
+  await workbook.commit();
+}
 
-    // Convert to CSV string
-    const headers = ['ID', 'Name', 'Image URL', 'Price', 'Category ID'];
-    const csvRows = [
-      headers.join(','),
-      ...products.map(p => `${p.id},"${p.name}","${p.image_url}",${p.price},${p.category_id}`)
-    ];
+// Express controller actions to trigger report generation and download
+async function downloadCSVReport(req, res) {
+  const filePath = path.join(__dirname, '../../reports/product_report.csv');
+  await generateCSVReport(filePath);
+  res.download(filePath);
+}
 
-    const csvContent = csvRows.join('\n');
+async function downloadXLSXReport(req, res) {
+  const filePath = path.join(__dirname, '../../reports/product_report.xlsx');
+  await generateXLSXReport(filePath);
+  res.download(filePath);
+}
 
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment;filename=products_report.csv');
-    res.send(csvContent);
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-module.exports = {
-  exportProductsExcel,
-  exportProductsCSV,
-};
+module.exports = { downloadCSVReport, downloadXLSXReport };

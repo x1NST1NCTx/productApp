@@ -17,7 +17,6 @@ const bulkUpload = async (req, res) => {
         throw new Error('Missing required product fields');
       }
       const category = await getCategoryByName(product.category_name, conn);
-      console.log("category",category.name);
       if (!category.name) {
         throw new Error(`Category '${product.category_name}' does not exist`);
       }

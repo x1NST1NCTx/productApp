@@ -57,10 +57,23 @@ const deleteProduct = async (id) => {
   }
 };
 
+const getProductsBatch = async (offset, limit) => {
+  const conn = await pool.getConnection();
+  try {
+    const rows = await conn.query(`SELECT name, image_url, price, category_id FROM products ORDER BY id ASC LIMIT ? OFFSET ?`,
+      [limit,offset]
+    );
+    return rows;
+  } finally {
+    conn.release();
+  }
+};
+
 module.exports = {
   createProduct,
   getProducts,
   getProductById,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getProductsBatch
 };
