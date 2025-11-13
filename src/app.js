@@ -20,4 +20,7 @@ app.use('/users', userRoutes);
 const productRoutes = require('./routes/productRoutes');
 app.use('/products', productRoutes);
 
+const productBulkRoutes = require('./routes/productBulkRoutes');
+app.use('/products', productBulkRoutes);
+
 module.exports = app;

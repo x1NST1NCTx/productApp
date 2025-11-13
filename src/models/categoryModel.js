@@ -48,11 +48,22 @@ const deleteCategory = async (id) => {
   }
 };
 
+const getCategoryByName = async (name) => {
+  const conn = await pool.getConnection();
+  try {
+    const rows = await conn.query('SELECT * FROM categories WHERE name = ?', [name]);
+    return rows[0];
+  } finally {
+    conn.release();
+  }
+};
+
 
 module.exports = {
   createCategory,
   getCategories,
   getCategoryById,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  getCategoryByName
 };

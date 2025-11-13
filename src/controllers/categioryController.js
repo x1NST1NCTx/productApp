@@ -1,8 +1,13 @@
 const categoryService = require('../services/categoryService');
+const categoryModel = require('../models/categoryModel');
 
 const createCategory = async (req, res) => {
   const { name } = req.body;
   if (!name) return res.status(400).json({ error: 'Category name is required' });
+  const existingCategory = await categoryModel.getCategoryByName(name);
+  if (existingCategory) {
+    return res.status(400).json({ error: "Category name already exists" });
+  }
   try {
     const id = await categoryService.createCategory(name);
     res.status(201).json({ id });
