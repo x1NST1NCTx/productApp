@@ -1,12 +1,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
-const productService = require('../services/productService');
 const pool = require('../config/db');
-
-const getCategoryIdByName = async (categoryName, conn) => {
-  const rows = await conn.query('SELECT id FROM categories WHERE name = ?', [categoryName]);
-  return rows.length ? rows[0].id : null;
-};
+const { getCategoryByName } = require('../models/categoryModel');
 
 const bulkUpload = async (req, res) => {
   const uploadFile = req.file;
@@ -21,13 +16,14 @@ const bulkUpload = async (req, res) => {
       if (!product.name || !product.price || !product.category_name) {
         throw new Error('Missing required product fields');
       }
-      const categoryId = await getCategoryIdByName(product.category_name, conn);
-      if (!categoryId) {
+      const category = await getCategoryByName(product.category_name, conn);
+      console.log("category",category.name);
+      if (!category.name) {
         throw new Error(`Category '${product.category_name}' does not exist`);
       }
       await conn.query(
         'INSERT INTO products(name, image_url, price, category_id) VALUES (?, ?, ?, ?)',
-        [product.name, product.image_url || null, product.price, categoryId]
+        [product.name, product.image_url || null, product.price, category.id]
       );
     }
   };

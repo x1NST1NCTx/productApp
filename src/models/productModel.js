@@ -57,17 +57,6 @@ const deleteProduct = async (id) => {
   }
 };
 
-const checkCategoryExists = async (category_id) => {
-  const conn = await pool.getConnection();
-  try {
-    const rows = await conn.query('SELECT id FROM categories WHERE id = ?', [category_id]);
-    return rows.length > 0;
-  } finally {
-    conn.release();
-  }
-};
-
-
 module.exports = {
   createProduct,
   getProducts,
