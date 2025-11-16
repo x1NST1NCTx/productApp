@@ -1,0 +1,59 @@
+<div [class.blurred]="drawerOpen() !== null">
+  <app-header 
+    (addProduct)="openDrawer('add-product')" 
+    (updateProduct)="openDrawer('update-product')"
+    (addCategory)="openDrawer('add-category')"
+    (updateCategory)="openDrawer('update-category')"
+    (bulkUpload)="openDrawer('bulk-upload')"
+    (usersClicked)="openDrawer('users')"
+    (searchTerm)="handleSearch($event)"
+  ></app-header>
+  <div class="page-content">
+    <router-outlet></router-outlet>
+    <app-search-product [searchKeyword]="searchKeyword()"></app-search-product>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="drawerOpen() !== null" (click)="closeDrawer()"></div>
+
+<!-- Add Product drawer -->
+<div class="side-sheet" [class.open]="drawerOpen() === 'add-product'">
+  <button class="close-btn" (click)="closeDrawer()">✖</button>
+  <div class="side-sheet-content">
+    <app-add-product></app-add-product>
+  </div>
+</div>
+
+<div class="side-sheet" [class.open]="drawerOpen() === 'update-product'">
+  <button class="close-btn" (click)="closeDrawer()">✖</button>
+  <div class="side-sheet-content">
+    <app-update-product></app-update-product>
+  </div>
+</div>
+
+<!-- Add Category drawer -->
+<div class="side-sheet" [class.open]="drawerOpen() === 'add-category'">
+  <button class="close-btn" (click)="closeDrawer()">✖</button>
+  <div class="side-sheet-content">
+    <app-add-category></app-add-category>
+  </div>
+</div>
+
+<div class="side-sheet" [class.open]="drawerOpen() === 'update-category'">
+  <button class="close-btn" (click)="closeDrawer()">✖</button>
+  <div class="side-sheet-content">
+    <app-update-category></app-update-category>
+  </div>
+</div>
+
+<!-- Bulk Upload drawer -->
+<div class="side-sheet" [class.open]="drawerOpen() === 'bulk-upload'">
+  <button class="close-btn" (click)="closeDrawer()">✖</button>
+  <div class="side-sheet-content">
+    <app-bulk-upload (close)="closeDrawer()"></app-bulk-upload>
+  </div>
+</div>
+
+
+
+

@@ -1,0 +1,46 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  color: #001f4d;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+  margin: 0 auto;
+
+  /* Border and padding moved here to wrap title + form */
+  border: 3px solid #001f4d;
+  border-radius: 24px;
+  padding: 24px 32px;
+  background-color: #f9faff;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: left;
+  width: 100%;
+  align-self: flex-start;
+  margin-left: 0; /* align with container padding */
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 450px;
+  gap: 16px;
+
+  /* Remove border & padding since container handles that */
+  /* border, padding, and background removed here */
+}

@@ -1,0 +1,59 @@
+<div class="header-wrapper" (click)="closeMenus()">
+  <header class="header" (click)="$event.stopPropagation()">
+
+    <!-- Left Dropdown Menu -->
+    <div class="dropdown">
+      <button class="dropdown-btn" (click)="toggleMenu()" type="button">
+        Menu ▼
+      </button>
+      <ul
+        class="dropdown-menu"
+        *ngIf="isMenuOpen"
+        (click)="$event.stopPropagation()"
+        role="menu"
+      >
+        <li (click)="triggerAddProduct()" role="menuitem" tabindex="0">Add Product</li>
+        <li (click)="triggerUpdateProduct()" role="menuitem" tabindex="0">Update Product</li>
+        <li (click)="triggerAddCategory()" role="menuitem" tabindex="0">Add Category</li>
+        <li (click)="triggerUpdateCategory()" role="menuitem" tabindex="0">Update Category</li>
+        <li (click)="triggerBulkUpload()" role="menuitem" tabindex="0">Bulk Upload</li>
+
+      </ul>
+    </div>
+
+
+    <!-- Search Bar -->
+    <div class="custom-search-bar">
+      <input
+        type="search"
+      placeholder="Search..."
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearch($event)"
+      (keyup.enter)="onSearch(searchQuery)"
+      aria-label="Search input"
+      />
+      <button (click)="onSearch(searchQuery)" aria-label="Search" type="button">
+        🔍
+      </button>
+    </div>
+
+    <!-- Right Dropdown Menu -->
+    <div class="dropdown">
+      <button class="dropdown-btn" (click)="toggleOptions()" type="button">
+        Options ▼
+      </button>
+      <ul
+        class="dropdown-menu"
+        *ngIf="isOptionsOpen"
+        (click)="$event.stopPropagation()"
+        role="menu"
+      >
+        <li (click)="navigateTo('/users')" role="menuitem" tabindex="0">
+          Users
+        </li>
+        <li (click)="triggerReportGeneration()" role="menuitem" tabindex="0">Report Generation</li>
+      </ul>
+    </div>
+
+  </header>
+</div>

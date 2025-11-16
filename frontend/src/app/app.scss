@@ -1,0 +1,67 @@
+.page-content.blurred {
+  filter: blur(8px);
+  transition: filter 0.2s ease;
+}
+
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.07);
+  backdrop-filter: blur(6px);
+  z-index: 101; /* Make sure it's above blurred content but below drawer (z-index 102) */
+  cursor: pointer;
+}
+
+
+.side-sheet {
+  position: fixed;
+  top: 0; left: 0; /* Slide from left; use 'right: 0' for right */
+  width: 40%;
+  max-width: 95vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 3px 0 24px 0 rgba(0,0,0,0.13);
+  transform: translateX(-100%);
+  transition: transform 0.38s cubic-bezier(.5,.5,0,1.05);
+  z-index: 102;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.side-sheet.open {
+  transform: translateX(0);
+}
+
+.side-sheet-content {
+  padding: 54px 44px 32px 44px;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.close-btn {
+  font-size: 24px;
+  border: none;
+  background: none;
+  color: #333;
+  margin: 20px 18px 0 0;
+  cursor: pointer;
+  position: absolute;
+  top: 0; right: 0;
+}
+
+.blurred {
+  filter: blur(8px);
+  pointer-events: none;     /* prevent interaction with blurred background */
+  user-select: none;
+  transition: filter 0.3s ease;
+}
+
+/* Keep drawer and overlay interactive */
+.side-sheet, .overlay {
+  pointer-events: auto;
+  user-select: auto;
+}
+

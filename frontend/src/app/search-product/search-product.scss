@@ -1,0 +1,12 @@
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center; /* Centers cards horizontally */
+  padding: 16px;
+}
+
+.product-card {
+  width: 250px;
+  box-sizing: border-box;
+}

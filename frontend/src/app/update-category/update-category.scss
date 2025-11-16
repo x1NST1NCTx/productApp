@@ -1,0 +1,33 @@
+.form-container {
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 24px;
+  background-color: #f9faff; /* subtle background */
+  border: 3px solid #001f4d; /* navy border */
+  border-radius: 24px;       /* soft rounded corners */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #001f4d;
+  margin: 0 0 16px 0;
+  align-self: flex-start;
+}
+
+.category-form, .product-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Optional padding for inputs and buttons is handled by Angular Material */

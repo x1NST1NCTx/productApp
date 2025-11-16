@@ -1,0 +1,31 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title class="dialog-title">Bulk CSV Upload</h2>
+
+  <mat-dialog-content class="dialog-content">
+    <input
+      type="file"
+      id="fileInput"
+      accept=".csv,text/csv"
+      (change)="onFileSelected($event)"
+      style="display: none;"
+    />
+
+    <div class="button-file-container">
+      <button mat-raised-button color="primary" (click)="triggerFileInput()">
+        Choose CSV File
+      </button>
+      <p *ngIf="fileSelectedFile" class="file-name">
+        {{ fileSelectedFile?.name }}
+      </p>
+    </div>
+
+    <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="resetForm()" mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="accent" (click)="submit()" [disabled]="!fileSelectedFile">
+      Upload
+    </button>
+  </mat-dialog-actions>
+</div>

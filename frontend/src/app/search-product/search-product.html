@@ -1,0 +1,15 @@
+<div class="products-grid">
+  <mat-card *ngFor="let product of products" class="product-card">
+    <mat-card-title>{{ product.name }}</mat-card-title>
+    <img mat-card-image [src]="product.image_url" alt="{{ product.name }}" />
+    <mat-card-content>
+      Price: {{ product.price | currency }}
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="paging-controls">
+  <button (click)="onPageChange(page - 1)" [disabled]="page <= 1">Previous</button>
+  <span>Page {{ page }} of {{ totalPages() }}</span>
+  <button (click)="onPageChange(page + 1)" [disabled]="page >= totalPages()">Next</button>
+</div>
