@@ -12,5 +12,4 @@ router.delete('/:id', productController.deleteProduct);
 router.get('/report/csv', productReportController.downloadCSVReport);
 router.get('/report/xlsx', productReportController.downloadXLSXReport);
 
-
 module.exports = router;

@@ -17,7 +17,7 @@
         <li (click)="triggerAddCategory()" role="menuitem" tabindex="0">Add Category</li>
         <li (click)="triggerUpdateCategory()" role="menuitem" tabindex="0">Update Category</li>
         <li (click)="triggerBulkUpload()" role="menuitem" tabindex="0">Bulk Upload</li>
-
+        <li (click)="triggerReportGeneration()" role="menuitem" tabindex="0">Report Generation</li>
       </ul>
     </div>
 
@@ -48,10 +48,11 @@
         (click)="$event.stopPropagation()"
         role="menu"
       >
-        <li (click)="navigateTo('/users')" role="menuitem" tabindex="0">
-          Users
-        </li>
-        <li (click)="triggerReportGeneration()" role="menuitem" tabindex="0">Report Generation</li>
+        <li (click)="searchProducts()" role="menuitem" tabindex="0">Search by Products</li>
+        <li (click)="searchCategories()" role="menuitem" tabindex="0">Search by Categories</li>
+        <li (click)="sortAscending()" role="menuitem" tabindex="0">Sort Ascending</li>
+        <li (click)="sortDescending()" role="menuitem" tabindex="0">Sort Descending</li>
+       
       </ul>
     </div>
 

@@ -26,4 +26,5 @@ export class CategoryService {
   updateCategory(id:number,category: Category): Observable<Category> {
     return this.http.patch<Category>(`${this.baseUrl}${id}`, category);
   }
+
 }

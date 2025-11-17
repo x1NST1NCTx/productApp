@@ -76,9 +76,14 @@ const searchProducts = async (req, res) => {
   const searchTerm = req.query.q?.trim();
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
-
-  const results = await productService.searchProducts(searchTerm, page, pageSize);
-  res.json(results);
+  const priceOrder = req.query.priceOrder === 'desc' ? 'desc' : 'asc';
+  const filterByCategory = req.query.filterByCategory === 'true';
+  try {
+    const results = await productService.searchProducts(searchTerm, page, pageSize, priceOrder, filterByCategory);
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
 };
 
 

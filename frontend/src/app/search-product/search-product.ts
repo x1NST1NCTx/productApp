@@ -13,6 +13,9 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class SearchProduct implements OnChanges {
   @Input() searchKeyword: string = '';
+  @Input() priceOrder: 'asc' | 'desc' | '' = '';
+  @Input() filterByCategory: boolean = false;
+
   products: Product[] = [];
   totalCount: number = 0;
   page: number = 1;
@@ -21,7 +24,13 @@ export class SearchProduct implements OnChanges {
   constructor(private productService: ProductService, private snackBar: MatSnackBar) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('searchKeyword' in changes && this.searchKeyword.trim()) {
+    
+    if (
+      ('searchKeyword' in changes && this.searchKeyword.trim()) ||
+      ('priceOrder' in changes) ||
+      ('filterByCategory' in changes)
+    ) {
+      
       const totalPages = this.totalPages();
       let clampedPage = this.page;
 
@@ -44,7 +53,13 @@ export class SearchProduct implements OnChanges {
 
     this.page = page;
 
-    this.productService.searchProducts(this.searchKeyword.trim(), page, this.pageSize).subscribe({
+    this.productService.searchProducts(
+      this.searchKeyword.trim(), 
+      page, 
+      this.pageSize, 
+      this.priceOrder,
+      this.filterByCategory
+    ).subscribe({
       next: res => {
         this.products = res.items;
         this.totalCount = res.totalCount;
@@ -52,6 +67,7 @@ export class SearchProduct implements OnChanges {
       error: () => {
         this.products = [];
         this.totalCount = 0;
+        this.snackBar.open('Failed to load products', 'Close', { duration: 3000 });
       }
     });
   }

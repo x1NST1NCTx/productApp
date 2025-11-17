@@ -34,12 +34,26 @@ export class ProductService {
     return this.http.get<Product>(`${this.baseUrl}${id}`);
   }
 
-  searchProducts(keyword: string, page: number, pageSize: number): Observable<PagedResult<Product>> {
-  const params = new HttpParams()
+  searchProducts(
+  keyword: string,
+  page: number,
+  pageSize: number,
+  priceOrder: 'asc' | 'desc' | '' = '',
+  filterByCategory = false
+): Observable<PagedResult<Product>> {
+  let params = new HttpParams()
     .set('q', keyword)
     .set('page', page.toString())
     .set('pageSize', pageSize.toString());
 
+  if (priceOrder) {
+    params = params.set('priceOrder', priceOrder);
+  }
+
+  if (filterByCategory) {
+    params = params.set('filterByCategory', 'true'); 
+  }
+
   return this.http.get<PagedResult<Product>>(`${this.baseUrl}search`, { params });
-}
+  }
 }

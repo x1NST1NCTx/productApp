@@ -18,11 +18,13 @@ import { SearchProduct } from './search-product/search-product';
 })
 export class App {
   protected readonly title = signal('frontend');
-  drawerOpen = signal<'add-product' | 'update-product' | 'add-category' | 'update-category' |'bulk-upload' | 'users' | null>(null);
+  drawerOpen = signal<'add-product' | 'update-product' | 'add-category' | 'update-category' |'bulk-upload' | 'report-generation' | null>(null);
 
   searchKeyword = signal('');
+  priceOrder = signal<'asc' | 'desc' | ''>('');
+  filterByCategory = signal(false);
 
-openDrawer(panel: 'add-product' | 'update-product' | 'add-category' | 'update-category' | 'bulk-upload' | 'users') {
+openDrawer(panel: 'add-product' | 'update-product' | 'add-category' | 'update-category' | 'bulk-upload' | 'report-generation') {
   this.drawerOpen.set(panel);
 }
 
@@ -32,4 +34,13 @@ closeDrawer() {
 handleSearch(term: string) {
     this.searchKeyword.set(term);
 }
+
+onPriceOrderChange(order: 'asc' | 'desc' | '') {
+  this.priceOrder.set(order);
+}
+
+onFilterByCategoryChange(filter: boolean) {
+    this.filterByCategory.set(filter);
+  }
+
 }

@@ -70,35 +70,66 @@ const getProductsBatch = async (offset, limit) => {
 
 };
 
-const searchProducts = async (searchTerm, page = 1, pageSize = 10) => {
+const searchProducts = async (searchTerm, page = 1, pageSize = 10, priceOrder = 'asc',filterByCategory = false ) => {
   const term = `%${searchTerm.toLowerCase()}%`;
   const offset = (page - 1) * pageSize;
+
+  // Validate and sanitize priceOrder
+  const order = priceOrder.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
+  console.log("fT",filterByCategory);
+
   const conn = await pool.getConnection();
 
   try {
-    const rows = await conn.query(
-  `SELECT * FROM products
-   WHERE LOWER(name) LIKE ?
-   ORDER BY name
-   LIMIT ? OFFSET ?`,
-  [term, pageSize, offset]
-);
+    let rows;
+    let countResult;
 
-    const countResult = await conn.query(
-  `SELECT COUNT(*) as totalCount
-   FROM products
-   WHERE LOWER(name) LIKE ?`,
-   [term]
-);
+    if (filterByCategory) {
+      // Search products where category name matches searchTerm
+      rows = await conn.query(
+        `SELECT p.*
+         FROM products p
+         JOIN categories c ON p.category_id = c.id
+         WHERE LOWER(c.name) LIKE ?
+         ORDER BY p.price ${order}
+         LIMIT ? OFFSET ?`,
+        [term, pageSize, offset]
+      );
+
+      countResult = await conn.query(
+        `SELECT COUNT(*) as totalCount
+         FROM products p
+         JOIN categories c ON p.category_id = c.id
+         WHERE LOWER(c.name) LIKE ?`,
+        [term]
+      );
+    } else {
+      // Search products by product name
+      rows = await conn.query(
+        `SELECT * FROM products
+         WHERE LOWER(name) LIKE ?
+         ORDER BY price ${order}
+         LIMIT ? OFFSET ?`,
+        [term, pageSize, offset]
+      );
+
+      countResult = await conn.query(
+        `SELECT COUNT(*) as totalCount
+         FROM products
+         WHERE LOWER(name) LIKE ?`,
+        [term]
+      );
+    }
 
     return {
       items: rows,
-      totalCount: countResult[0].totalCount
+      totalCount: countResult[0].totalCount,
     };
   } finally {
     conn.release();
-  }
+  } 
 };
+
 
 module.exports = {
   createProduct,

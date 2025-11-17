@@ -5,12 +5,13 @@
     (addCategory)="openDrawer('add-category')"
     (updateCategory)="openDrawer('update-category')"
     (bulkUpload)="openDrawer('bulk-upload')"
-    (usersClicked)="openDrawer('users')"
     (searchTerm)="handleSearch($event)"
+    (priceOrderChange)="onPriceOrderChange($event)"
+    (filterByCategoryChange)="onFilterByCategoryChange($event)"
   ></app-header>
   <div class="page-content">
     <router-outlet></router-outlet>
-    <app-search-product [searchKeyword]="searchKeyword()"></app-search-product>
+    <app-search-product [searchKeyword]="searchKeyword()" [priceOrder]="priceOrder()" [filterByCategory]="filterByCategory()"></app-search-product>
   </div>
 </div>
 
@@ -48,6 +49,13 @@
 
 <!-- Bulk Upload drawer -->
 <div class="side-sheet" [class.open]="drawerOpen() === 'bulk-upload'">
+  <button class="close-btn" (click)="closeDrawer()">✖</button>
+  <div class="side-sheet-content">
+    <app-bulk-upload (close)="closeDrawer()"></app-bulk-upload>
+  </div>
+</div>
+
+<div class="side-sheet" [class.open]="drawerOpen() === 'report-generation'">
   <button class="close-btn" (click)="closeDrawer()">✖</button>
   <div class="side-sheet-content">
     <app-bulk-upload (close)="closeDrawer()"></app-bulk-upload>

@@ -18,14 +18,18 @@ export class Header {
   searchQuery = '';
   isMenuOpen = false;
   isOptionsOpen = false;
+  priceOrder: 'asc' | 'desc' | '' = '';
+  filterByCategory: boolean = false;
 
   @Output() addProduct = new EventEmitter<void>();
   @Output() updateProduct = new EventEmitter<void>();
   @Output() addCategory = new EventEmitter<void>();
   @Output() updateCategory = new EventEmitter<void>();
   @Output() bulkUpload = new EventEmitter<void>();
-  @Output() usersClicked = new EventEmitter<void>();
   @Output() searchTerm = new EventEmitter<string>();
+  @Output() priceOrderChange = new EventEmitter<'asc' | 'desc' | ''>();
+  @Output() filterByCategoryChange = new EventEmitter<boolean>();
+
 
   private searchSubject = new Subject<string>();
   private subscription: Subscription;
@@ -109,7 +113,31 @@ export class Header {
       console.error('Report generation error:', error);
     }
   });
-}
+  }
+
+  sortAscending() {
+    this.priceOrder = 'asc';
+    this.priceOrderChange.emit('asc');
+    this.closeMenus();
+  }
+
+  sortDescending() {
+    this.priceOrder = 'desc';
+    this.priceOrderChange.emit('desc');
+    this.closeMenus();
+  }
+
+  searchProducts() {
+    this.filterByCategory = false;
+    this.filterByCategoryChange.emit(false);
+    
+  }
+
+  searchCategories() {
+    this.filterByCategory = true;
+    this.filterByCategoryChange.emit(true);
+    this.closeMenus();
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
